@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -102,14 +101,13 @@ public class Ref_banco {
     
     public String getSequenciaReferencia(){
        StringBuilder seq = new StringBuilder();
-       int count = this.pos_ini;
+       
        int tam = this.dados.sequencia[0].length();
        for(int i=0;i<tam;i++){
-        if(this.dados.sequencia[0].charAt(i)!= '.' && this.dados.sequencia[0].charAt(i)!= '|'){
-            count++;
-            if(count>=0){
+        if(this.dados.sequencia[0].charAt(i)!= '.' && this.dados.sequencia[0].charAt(i)!= '|' && this.dados.sequencia[0].charAt(i)!= '*'){
+            
                 seq.append(this.dados.sequencia[0].charAt(i));
-            }
+            
         }   
        }
         
