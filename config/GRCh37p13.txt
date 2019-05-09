@@ -1,29 +1,20 @@
-﻿identidade com a rederencia = -
-inserção ou deleção = .
-sequencia desconhecida = *
-
-
-A = normal 29910247 - 216 = 29910031
-
-B = invertido e complementar 31321649 - 510 = 31321139
-
-C = 
-
-DPA1 = 
-
-DPB1 = 
-
-DPB2 =
-
-DQA1 = 
-
-DQB1 = 
-
-DRA =
-
-DRB1 =
-
-DRB3 =
-
-DRB4 =
-
+﻿classic
+A = 29910031
+B = ic31321139
+C = 0001
+DPA1 = 0001
+DPB1 = 0001
+DPB2 = 0001
+DQA1 = 0001
+DQB1 = 0001
+DRA = 0001
+DRB1 = 0001
+DRB3 = 0001
+DRB4 = 0001
+no_classic
+DMA = 0001
+DMB = 0001
+DOB = 0001
+E = 0001
+F = 0001
+G = 0001

@@ -101,7 +101,7 @@ public class Ref_banco {
     
     public String getSequenciaReferencia(){
        StringBuilder seq = new StringBuilder();
-       
+       StringBuilder seq2 = new StringBuilder();
        int tam = this.dados.sequencia[0].length();
        for(int i=0;i<tam;i++){
         if(this.dados.sequencia[0].charAt(i)!= '.' && this.dados.sequencia[0].charAt(i)!= '|' && this.dados.sequencia[0].charAt(i)!= '*'){
@@ -110,8 +110,18 @@ public class Ref_banco {
             
         }   
        }
-        
-        return seq.toString();
+        tam = seq.length();
+        seq2.append(">teste\n");
+       for(int i=0;i<tam;i++){
+           seq2.append(seq.charAt(i));
+           if((i+1)%80==0){
+               seq2.append("\n");
+           }
+           
+       }
+       seq2.append("\n");
+       
+        return seq2.toString();
     }
 public void inverter(){
     int tam = this.dados.sequencia.length;
