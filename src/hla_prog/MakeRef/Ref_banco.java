@@ -113,7 +113,56 @@ public class Ref_banco {
         
         return seq.toString();
     }
-
+public void inverter(){
+    int tam = this.dados.sequencia.length;
+    StringBuilder res;
+    int tam2 = this.dados.sequencia[0].length();
+    for(int i=0;i<tam;i++){
+        res = new StringBuilder(tam2);
+        for(int j=0;j<tam2;j++){
+            //char c = this.dados.sequencia[i].charAt((tam2-1)-j);
+            res.append(this.dados.sequencia[i].charAt((tam2-1)-j));
+        }
+        this.dados.sequencia[i] = res.toString();
+    }
+    
+}
+    
+  public void sequenciaComplementar(){
+      int tam = this.dados.sequencia.length;
+      StringBuilder res;
+      for(int i=0;i<tam;i++){
+          res = new StringBuilder(this.dados.sequencia[i]);
+          int tam2 = res.length();
+          for(int j=0;j<tam2;j++){
+              res.setCharAt(j, complementar(res.charAt(j)));
+          }
+          this.dados.sequencia[i] = res.toString();
+      }
+  }  
+    
+  private char complementar(char c){
+      char res;
+   switch (c){
+       case 'A':
+           res = 'T';
+           break;
+       case 'T':
+           res = 'A';
+           break;
+       case 'C':
+           res = 'G';
+           break;
+       case 'G':
+           res = 'C';
+           break;
+        default:
+            res = c;
+            break;
+   }   
+      
+    return res;  
+  }
     private class Dados {
 
         public int pos_ini;

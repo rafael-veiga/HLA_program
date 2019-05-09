@@ -96,6 +96,8 @@ public class main {
         
         
         Ref_banco ref = new Ref_banco(file, pasta);
+       // ref.inverter();
+       // ref.sequenciaComplementar();
         String seq = ref.getSequenciaReferencia();
         for(int i = 0;i<seq.length();i++){
             if((i%60)==59){
