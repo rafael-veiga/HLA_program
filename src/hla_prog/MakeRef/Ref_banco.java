@@ -21,7 +21,7 @@ public class Ref_banco {
     private int pos_ini;
     private Dados dados;
 
-    public Ref_banco(File arq_ref, File pasta) {
+    public Ref_banco(File arq_ref) {
 
         try {
             BufferedReader ler = new BufferedReader(new FileReader(arq_ref));

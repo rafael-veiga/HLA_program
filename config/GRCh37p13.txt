@@ -1,0 +1,29 @@
+﻿identidade com a rederencia = -
+inserção ou deleção = .
+sequencia desconhecida = *
+
+
+A = normal 29910247 - 216 = 29910031
+
+B = invertido e complementar 31321649 - 510 = 31321139
+
+C = 
+
+DPA1 = 
+
+DPB1 = 
+
+DPB2 =
+
+DQA1 = 
+
+DQB1 = 
+
+DRA =
+
+DRB1 =
+
+DRB3 =
+
+DRB4 =
+
