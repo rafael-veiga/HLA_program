@@ -6,8 +6,8 @@
 package hla_prog;
 
 import hla_prog.MakeRef.CriarRef;
-import java.io.File;
-import hla_prog.MakeRef.Ref_banco;
+//import java.io.File;
+//import hla_prog.MakeRef.Ref_banco;
 
 /**
  *
@@ -20,7 +20,8 @@ public class main {
      */
     public static void main(String[] args) {
         CriarRef ref = new CriarRef();
-        ref.createFasta("C:/Users/rafael.veiga/Desktop/HLA/descricao/referencia_37.txt");
+     //   ref.createFasta("C:/Users/rafael.veiga/Desktop/HLA/descricao/referencia_37.txt");
+     ref.createFasta("F:/HLA/descricao/referencia_37.txt");
 //        String arq_in = null;
 //        String arq_out = null;
 //        String arq_ref = null;
