@@ -20,7 +20,7 @@ public class main {
      */
     public static void main(String[] args) {
         CriarRef ref = new CriarRef();
-        ref.createFasta("F:/HLA/descricao/referencia.txt");
+        ref.createFasta("C:/Users/rafael.veiga/Desktop/HLA/descricao/referencia_37.txt");
 //        String arq_in = null;
 //        String arq_out = null;
 //        String arq_ref = null;
