@@ -50,7 +50,7 @@ public class Ref_banco {
                         this.pos_ini = pos;
                     }
                 } else {
-                    if(linha.contains("Please see")){
+                    if (linha.contains("Please see")) {
                         return;
                     }
                     System.err.println("Error, file " + arq_ref.getAbsolutePath() + " do not contain gDNA!!!");
@@ -98,81 +98,96 @@ public class Ref_banco {
         }
 
     }
+
+    public String[] getsequencias() {
+        return this.dados.sequencia;
+
+    }
     
-    public String getSequenciaReferencia(){
-       StringBuilder seq = new StringBuilder();
-       StringBuilder seq2 = new StringBuilder();
-       int tam = this.dados.sequencia[0].length();
-       for(int i=0;i<tam;i++){
-        if(this.dados.sequencia[0].charAt(i)!= '.' && this.dados.sequencia[0].charAt(i)!= '|' && this.dados.sequencia[0].charAt(i)!= '*'){
-            
+    public String[] getID(){
+        return this.dados.id;
+    }
+    
+    public int getPosIni(){
+        return this.pos_ini;
+    }
+
+    public String getSequenciaReferencia() {
+        StringBuilder seq = new StringBuilder();
+        StringBuilder seq2 = new StringBuilder();
+        int tam = this.dados.sequencia[0].length();
+        for (int i = 0; i < tam; i++) {
+            if (this.dados.sequencia[0].charAt(i) != '.' && this.dados.sequencia[0].charAt(i) != '|' && this.dados.sequencia[0].charAt(i) != '*') {
+
                 seq.append(this.dados.sequencia[0].charAt(i));
-            
-        }   
-       }
+
+            }
+        }
         tam = seq.length();
         seq2.append(">teste\n");
-       for(int i=0;i<tam;i++){
-           seq2.append(seq.charAt(i));
-           if((i+1)%80==0){
-               seq2.append("\n");
-           }
-           
-       }
-       seq2.append("\n");
-       
+        for (int i = 0; i < tam; i++) {
+            seq2.append(seq.charAt(i));
+            if ((i + 1) % 80 == 0) {
+                seq2.append("\n");
+            }
+
+        }
+        seq2.append("\n");
+
         return seq2.toString();
     }
-public void inverter(){
-    int tam = this.dados.sequencia.length;
-    StringBuilder res;
-    int tam2 = this.dados.sequencia[0].length();
-    for(int i=0;i<tam;i++){
-        res = new StringBuilder(tam2);
-        for(int j=0;j<tam2;j++){
-            //char c = this.dados.sequencia[i].charAt((tam2-1)-j);
-            res.append(this.dados.sequencia[i].charAt((tam2-1)-j));
+
+    public void inverter() {
+        int tam = this.dados.sequencia.length;
+        StringBuilder res;
+        int tam2 = this.dados.sequencia[0].length();
+        for (int i = 0; i < tam; i++) {
+            res = new StringBuilder(tam2);
+            for (int j = 0; j < tam2; j++) {
+                //char c = this.dados.sequencia[i].charAt((tam2-1)-j);
+                res.append(this.dados.sequencia[i].charAt((tam2 - 1) - j));
+            }
+            this.dados.sequencia[i] = res.toString();
         }
-        this.dados.sequencia[i] = res.toString();
+
     }
-    
-}
-    
-  public void sequenciaComplementar(){
-      int tam = this.dados.sequencia.length;
-      StringBuilder res;
-      for(int i=0;i<tam;i++){
-          res = new StringBuilder(this.dados.sequencia[i]);
-          int tam2 = res.length();
-          for(int j=0;j<tam2;j++){
-              res.setCharAt(j, complementar(res.charAt(j)));
-          }
-          this.dados.sequencia[i] = res.toString();
-      }
-  }  
-    
-  private char complementar(char c){
-      char res;
-   switch (c){
-       case 'A':
-           res = 'T';
-           break;
-       case 'T':
-           res = 'A';
-           break;
-       case 'C':
-           res = 'G';
-           break;
-       case 'G':
-           res = 'C';
-           break;
-        default:
-            res = c;
-            break;
-   }   
-      
-    return res;  
-  }
+
+    public void sequenciaComplementar() {
+        int tam = this.dados.sequencia.length;
+        StringBuilder res;
+        for (int i = 0; i < tam; i++) {
+            res = new StringBuilder(this.dados.sequencia[i]);
+            int tam2 = res.length();
+            for (int j = 0; j < tam2; j++) {
+                res.setCharAt(j, complementar(res.charAt(j)));
+            }
+            this.dados.sequencia[i] = res.toString();
+        }
+    }
+
+    private char complementar(char c) {
+        char res;
+        switch (c) {
+            case 'A':
+                res = 'T';
+                break;
+            case 'T':
+                res = 'A';
+                break;
+            case 'C':
+                res = 'G';
+                break;
+            case 'G':
+                res = 'C';
+                break;
+            default:
+                res = c;
+                break;
+        }
+
+        return res;
+    }
+
     private class Dados {
 
         public int pos_ini;
@@ -188,7 +203,7 @@ public void inverter(){
         }
 
         public void add(int pos, ArrayList<String> seq) {
-            
+
             int tam = this.id.length;
             for (int i = 0; i < tam; i++) {
                 sequencia[i] += seq.get(i);
