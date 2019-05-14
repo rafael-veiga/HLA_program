@@ -204,11 +204,11 @@ public class CriarRef {
                 a1 = aRef.charAt(a);
                 a2 = aRef_aln.charAt(b);
                 a3 = geno_aln.charAt(c);
-                if ( g == 2 && a==676) {
-                    System.out.println(aRef.substring(a, a + 30));
-                    System.out.println(aRef_aln.substring(b, b + 30));
-                    System.out.println(geno_aln.substring(c, c + 30));
-                }
+//                if ( g == 2 && a==676) {
+//                    System.out.println(aRef.substring(a, a + 30));
+//                    System.out.println(aRef_aln.substring(b, b + 30));
+//                    System.out.println(geno_aln.substring(c, c + 30));
+//                }
                 if (a1 == '.') {
                     if (a3 != '-' && a2 != '-') {
                         res[g][a] = 0;
