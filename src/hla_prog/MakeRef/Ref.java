@@ -15,10 +15,11 @@ public class Ref implements Serializable{
 private String[] genes;
 private int[][]pos; //[gene][pos]
 private String[][] seqL1;
-private String[][][] seqL2;
+
     public Ref(CriarRef config) {
         this.genes = config.genes;
         this.pos = config.getPos();
+        System.out.println("hla_prog.MakeRef.Ref.<init>()");
     }
     
     

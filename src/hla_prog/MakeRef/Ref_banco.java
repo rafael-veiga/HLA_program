@@ -111,6 +111,11 @@ public class Ref_banco {
     public int getPosIni(){
         return this.pos_ini;
     }
+    
+    public void setPosIni(int pos){
+        this.pos_ini = pos;
+        
+    }
 
     public String getSequenciaReferencia() {
         StringBuilder seq = new StringBuilder();
@@ -190,12 +195,12 @@ public class Ref_banco {
 
     private class Dados {
 
-        public int pos_ini;
+       
         public String[] sequencia;
         public String[] id;
 
         public Dados(int pos_ini, ArrayList<String> id, ArrayList<String> seq) {
-            this.pos_ini = pos_ini;
+           
             this.sequencia = new String[seq.size()];
             seq.toArray(sequencia);
             this.id = new String[id.size()];

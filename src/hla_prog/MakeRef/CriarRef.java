@@ -118,6 +118,7 @@ public class CriarRef {
                 a = sequencias.get(i).indexOf(';');
                 this.seq[0][i] = new String(sequencias.get(i).substring(0, a));
                 this.seq[1][i] = new String(sequencias.get(i).substring(a + 1));
+                this.bancos[i].setPosIni(posicao.get(i));
             }
 
         } catch (FileNotFoundException ex) {
@@ -182,25 +183,81 @@ public class CriarRef {
 
     public int[][] getPos() {
         int a, b, c;//a = Aref, b = Aref_aln, c = genoma_aln
+        char a1, a2, a3;
         int tam = genes.length;
         int[][] res = new int[tam][];
 
         for (int g = 0; g < tam; g++) {
             int pos_ini = this.bancos[g].getPosIni();
             String aRef = this.bancos[g].getsequencias()[0];
-            aRef= aRef.replace("\\|", "");
+            String aRef_aln = this.seq[0][g];
+            String geno_aln = this.seq[1][g];
+            aRef = aRef.replaceAll("\\|", "");
             int tam2 = aRef.length();
             res[g] = new int[tam2];
 
             b = 1;
             c = 1;
             res[g][0] = pos_ini++;
-            for (a = 1; a < tam2; a++) {
-               // if()
+            System.out.println(""+g);
+            for (a = 1; a < tam2;) {
+                a1 = aRef.charAt(a);
+                a2 = aRef_aln.charAt(b);
+                a3 = geno_aln.charAt(c);
+                if ( g == 2 && a==676) {
+                    System.out.println(aRef.substring(a, a + 30));
+                    System.out.println(aRef_aln.substring(b, b + 30));
+                    System.out.println(geno_aln.substring(c, c + 30));
+                }
+                if (a1 == '.') {
+                    if (a3 != '-' && a2 != '-') {
+                        res[g][a] = 0;
+                        a++;
+                        //b++;
+                        //c++;
+                        continue;
+                    }
+                    if (a3 != '-' && a2 == '-') {
+                        res[g][a] = pos_ini++;
+                        a++;
+                        
+                        b++;
+                        continue;
+                    }
+                    if (a3 == '-' && a2 != '-') {
+                        res[g][a] = 0;
+                        //c++;
+                        
+                        a++;
+                        continue;
+                    }
+
+                }
+
+                if (a2 == '-') {
+                    b++;
+                    c++;
+                    pos_ini++;
+                    continue;
+                }
+
+                if (a3 == '-') {
+                    res[g][a] = 0;
+                    b++;
+                    c++;
+                    a++;
+                    continue;
+                }
+
+                res[g][a] = pos_ini++;
+                a++;
+                b++;
+                c++;
 
             }
-
         }
-        return null;
+        return res;
+
     }
+
 }
