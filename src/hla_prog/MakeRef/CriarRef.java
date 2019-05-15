@@ -30,6 +30,67 @@ public class CriarRef {
     // private int pos[];
     //private int numGenesClassic;
 
+    public String[][] gerId() {
+        ArrayList<String>[] lista = new ArrayList[genes.length];
+        int tam = genes.length;
+        for (int g = 0; g < tam; g++) {
+            String id[] = this.bancos[g].getID();
+            lista[g] = new ArrayList();
+            int tam2 = id.length;
+            int a;
+            for (int i = 0; i < tam2; i++) {
+                a = id[i].indexOf(':');
+                String s = id[i].substring(0, a);
+                if (!lista[g].contains(s)) {
+                    lista[g].add(new String(s));
+                }
+
+            }
+        }
+
+        String[][] res = new String[tam][];
+        for (int g = 0; g < tam; g++) {
+            res[g] = new String[lista[g].size()];
+            lista[g].toArray(res[g]);
+        }
+
+        return res;
+    }
+
+    public String[][][] getId2(String[][] id) {
+        ArrayList<String>[][] lista = new ArrayList[id.length][];
+        int tam = id.length;
+        for (int g = 0; g < tam; g++) {
+            int tam2 = id[g].length;
+            lista[g] = new ArrayList[tam2];
+            for (int h = 0; h < tam2; h++) {
+                lista[g][h] = new ArrayList();
+                String ind[] = this.bancos[g].getID();
+                int tamInd = ind.length;
+                for (int i = 0; i < tamInd; i++) {
+                    String aux[] = ind[i].split(":");
+                    if (aux[0].contentEquals(id[g][h])) {
+                        if (!lista[g][h].contains(aux[1])) {
+                            lista[g][h].add(aux[1]);
+                        }
+                    }
+                }
+            }
+
+        }
+        String[][][] res = new String[tam][][];
+        for (int g = 0; g < tam; g++) {
+            int tam2 = lista[g].length;
+            res[g] = new String[tam2][];
+            for (int h = 0; h < tam2; h++) {
+                res[g][h] = new String[lista[g][h].size()];
+                lista[g][h].toArray(res[g][h]);
+            }
+        }
+
+        return res;
+    }
+
     public CriarRef() {
         File pasta = new File("config");
         File arqs[] = pasta.listFiles();
@@ -199,7 +260,7 @@ public class CriarRef {
             b = 1;
             c = 1;
             res[g][0] = pos_ini++;
-            System.out.println(""+g);
+            System.out.println("" + g);
             for (a = 1; a < tam2;) {
                 a1 = aRef.charAt(a);
                 a2 = aRef_aln.charAt(b);
@@ -220,14 +281,14 @@ public class CriarRef {
                     if (a3 != '-' && a2 == '-') {
                         res[g][a] = pos_ini++;
                         a++;
-                        
+
                         b++;
                         continue;
                     }
                     if (a3 == '-' && a2 != '-') {
                         res[g][a] = 0;
                         //c++;
-                        
+
                         a++;
                         continue;
                     }
@@ -258,6 +319,67 @@ public class CriarRef {
         }
         return res;
 
+    }
+
+    public String[][] getSeq1(String[][] id) {
+        int tam = id.length;
+        String res[][] = new String[tam][];
+        for (int g = 0; g < tam; g++) {
+            res[g] = new String[id[g].length];
+            String nome[] = this.bancos[g].getID();
+            String seq[] = this.bancos[g].getsequencias();
+
+            for (int h = 0; h < id[g].length; h++) {
+                ArrayList<String> lista = new ArrayList();
+                lista.add(seq[0]);
+                for (int i = 0; i < nome.length; i++) {
+                    String aux[] = nome[i].split(":");
+                    if (aux[0].contentEquals(id[g][h])) {
+                        lista.add(seq[i]);
+                        //lista.add(nome[i]);
+                    }
+                }
+             res[g][h] = processSeq(lista);
+                
+
+            }
+
+        }
+
+        return res;
+    }
+    
+    
+    private String processSeq(ArrayList<String> lista){
+        StringBuilder res = new StringBuilder();
+        String ref = lista.get(0);
+        ref = ref.replaceAll("\\|", "");
+        int tam = lista.size();
+        ArrayList<String> nova = new ArrayList();
+        for(int i=0;i<tam;i++){
+            nova.add(lista.get(i).replaceAll("\\|", ""));
+        }
+        int tam2 = ref.length();
+        for(int c=0;c<tam2;c++){
+            
+        }
+        
+        return null;
+    }
+
+    private char compCaracter(ArrayList<Character> c) {
+        //AT = 1
+        //AC = 2
+        //AG = 3
+        //TC = 4
+        //TG = 5
+        //CG = 6
+        //TCG = 7
+        //ACG = 8
+        //ATG = 9
+        //ATC = 10
+
+        return ' ';
     }
 
 }
