@@ -21,11 +21,12 @@ public class main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Banco b = new Banco("C:/Users/rafael.veiga/Desktop/HLA/bancos/salvador5M.ped", "C:/Users/rafael.veiga/Desktop/HLA/bancos/salvador5M.map",Leitor.load() );
-        
+       
        // CriarRef ref = new CriarRef();
        // Ref nRef = new Ref(ref);
-      //  Leitor.save(nRef);
+       // Leitor.save(nRef);
+       Banco b = new Banco("C:/Users/rafael.veiga/Documents/bancos/epigen5M_chr6.ped", "C:/Users/rafael.veiga/Documents/bancos/epigen5M_chr6.map",Leitor.load() );
+        b.execute("C:/Users/rafael.veiga/Documents/bancos/saida.csv");
 //        Ref data =Leitor.load();
 //        System.out.println("");
         //ref.createFasta("C:/Users/rafael.veiga/Desktop/HLA/descricao/referencia_37.txt");

@@ -28,7 +28,39 @@ public final String[][][]seq2; //[gene][L1][L2]
         this.seq2 = config.getSeq2(id,id2);
     }
     
+    public int getIndexPos(int pos, int gene){
+        if(this.pos[gene][0]==pos){
+            return 0;
+        }
+        if(this.pos[gene][this.pos[gene].length-1]==pos){
+            return this.pos[gene].length-1; 
+        }
+        
+        return recpos(0, this.pos[gene].length-1, gene, pos);
+    }
     
+    private int recpos(int a,int b, int gene, int pos){
+        int m =(a+b)/2;
+        if(b-a==1){
+            return -1;
+        }
+        while(this.pos[gene][m]==0 && m!=a && m!=b){
+          m++;  
+        }
+        if(m==a || m==b){
+            return -1;
+        }
+        if(this.pos[gene][m]==pos){
+            return m;
+        }
+        
+        if(this.pos[gene][m]>pos){
+            return recpos(a, m, gene, pos);
+        }
+        else{
+            return recpos(m, b, gene, pos);
+        }
+    }
     
     
     
