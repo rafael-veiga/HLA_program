@@ -339,8 +339,7 @@ public class CriarRef {
                         //lista.add(nome[i]);
                     }
                 }
-             res[g][h] = processSeq(lista);
-                
+                res[g][h] = processSeq(lista);
 
             }
 
@@ -348,26 +347,60 @@ public class CriarRef {
 
         return res;
     }
-    
-    
-    private String processSeq(ArrayList<String> lista){
-        StringBuilder res = new StringBuilder();
+
+    public String[][][] getSeq2(String[][] id, String[][][] id2) {
+        int tam = id.length;
+        String res[][][] = new String[tam][][];
+        for (int g = 0; g < tam; g++) {
+            res[g] = new String[id[g].length][];
+            String nome[] = this.bancos[g].getID();
+            String seq[] = this.bancos[g].getsequencias();
+            for (int l1 = 0; l1 < id[g].length; l1++) {
+                res[g][l1] = new String[id2[g][l1].length];
+                for (int l2 = 0; l2 < id2[g][l1].length; l2++) {
+                    ArrayList<String> lista = new ArrayList();
+                    lista.add(seq[0]);
+                    for (int i = 0; i < nome.length; i++) {
+                        String aux[] = nome[i].split(":");
+                        if (aux[0].contentEquals(id[g][l1]) && aux[1].contentEquals(id2[g][l1][l2])) {
+                            lista.add(seq[i]);
+                            //lista.add(nome[i]);
+                        }
+                    }
+                    res[g][l1][l2] = processSeq(lista);
+
+                }
+            }
+        }
+
+        return res;
+    }
+
+    private String processSeq(ArrayList<String> lista) {
+
         String ref = lista.get(0);
         ref = ref.replaceAll("\\|", "");
+        StringBuilder res = new StringBuilder(ref.length());
         int tam = lista.size();
         ArrayList<String> nova = new ArrayList();
-        for(int i=0;i<tam;i++){
+        for (int i = 0; i < tam; i++) {
             nova.add(lista.get(i).replaceAll("\\|", ""));
         }
         int tam2 = ref.length();
-        for(int c=0;c<tam2;c++){
-            
+        for (int c = 0; c < tam2; c++) {
+            ArrayList<Character> car = new ArrayList();
+            for (int i = 1; i < tam; i++) {
+                if (!car.contains(nova.get(i).charAt(c))) {
+                    car.add(nova.get(i).charAt(c));
+                }
+            }
+            res.append(compCaracter(car, nova.get(0).charAt(c)));
         }
-        
-        return null;
+
+        return res.toString();
     }
 
-    private char compCaracter(ArrayList<Character> c) {
+    private char compCaracter(ArrayList<Character> c, char ref) {
         //AT = 1
         //AC = 2
         //AG = 3
@@ -377,9 +410,63 @@ public class CriarRef {
         //TCG = 7
         //ACG = 8
         //ATG = 9
-        //ATC = 10
+        //ATC = 0
+        if (c.contains('*') || c.contains('.')) {
+            return '*';
+        }
+        for (int i = 0; i < c.size(); i++) {
+            if (c.get(i) == '-') {
+                if (c.contains(ref)) {
+                    c.remove(i);
+                    i = 0;
+                } else {
+                    c.set(i, ref);
+                }
+            }
+        }
+        //caso 1 elemento
+        if (c.size() == 1) {
+            return c.get(0);
+        }
+        if (c.size() == 2) {
+            if (c.contains('A') && c.contains('T')) {
+                return '1';
+            }
+            if (c.contains('A') && c.contains('C')) {
+                return '2';
+            }
+            if (c.contains('A') && c.contains('G')) {
+                return '3';
+            }
+            if (c.contains('T') && c.contains('C')) {
+                return '4';
+            }
+            if (c.contains('T') && c.contains('G')) {
+                return '5';
+            }
+            if (c.contains('C') && c.contains('G')) {
+                return '6';
+            }
+        }
+        if (c.size() == 3) {
+            if (!c.contains('A')) {
+                return '7';
+            }
+            if (!c.contains('T')) {
+                return '8';
+            }
+            if (!c.contains('C')) {
+                return '9';
+            }
+            if (!c.contains('G')) {
+                return '0';
+            }
+        }
+        if (c.size() == 4) {
+            return '*';
+        }
 
-        return ' ';
+        return 'E';
     }
 
 }

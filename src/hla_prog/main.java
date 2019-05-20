@@ -5,8 +5,9 @@
  */
 package hla_prog;
 
-import hla_prog.MakeRef.CriarRef;
-import hla_prog.MakeRef.Ref;
+//import hla_prog.MakeRef.CriarRef;
+import hla_prog.MakeRef.Leitor;
+//import hla_prog.MakeRef.Ref;
 //import java.io.File;
 //import hla_prog.MakeRef.Ref_banco;
 
@@ -20,8 +21,13 @@ public class main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        CriarRef ref = new CriarRef();
-        Ref nRef = new Ref(ref);
+        Banco b = new Banco("C:/Users/rafael.veiga/Desktop/HLA/bancos/salvador5M.ped", "C:/Users/rafael.veiga/Desktop/HLA/bancos/salvador5M.map",Leitor.load() );
+        
+       // CriarRef ref = new CriarRef();
+       // Ref nRef = new Ref(ref);
+      //  Leitor.save(nRef);
+//        Ref data =Leitor.load();
+//        System.out.println("");
         //ref.createFasta("C:/Users/rafael.veiga/Desktop/HLA/descricao/referencia_37.txt");
   //   ref.createFasta("F:/HLA/descricao/referencia_37.txt");
 //        String arq_in = null;
