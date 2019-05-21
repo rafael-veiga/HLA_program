@@ -193,98 +193,109 @@ public class Banco {
             int pos = this.pos[snp];
             int indexPos = this.ref.getIndexPos(pos, gene);
             if (indexPos >= 0) {
-               
+
                 l1.add(L1(c1, c2, indexPos, gene));
-                
-                
+
             }
         }
-        
-        getConsesus(l1);
 
-        return null;
-    }
-    
-    private ArrayList<Integer> getConsesus(ArrayList<ArrayList<Integer>> l1){
-        ArrayList<Integer> lista = l1.get(0);
-        for(int i=1;i<l1.size();i++){
-            
-        }
+        double valor[] = getConsesus(l1, snpList.size(), gene);
+        ArrayList<Integer> lista = new ArrayList();
+        
+        
         
         return null;
     }
 
-private ArrayList<Integer> L1(char c1,char c2, int indexPos,int gene){
-    ArrayList<Integer> lista = new ArrayList();
-    int tam = this.ref.seq1[gene].length;
-    for(int l=0;l<tam;l++){
-        char n = this.ref.seq1[gene][l].charAt(indexPos);
-        if(n=='*'){
-            lista.add(l);
-            continue;
-        }
-        if(n==c1||n==c2){
-            lista.add(l);
-            continue;
-        }
-        //AT = 1
-        if(n=='1' && ((c1=='A')||(c2=='A')||(c1=='T')||(c2=='T'))){
-            lista.add(l);
-            continue;
-        }
-        //AC = 2
-        if(n=='2' && ((c1=='A')||(c2=='A')||(c1=='C')||(c2=='C'))){
-            lista.add(l);
-            continue;
-        }
-        //AG = 3
-        if(n=='3' && ((c1=='A')||(c2=='A')||(c1=='G')||(c2=='G'))){
-            lista.add(l);
-            continue;
-        }
-        //TC = 4
-        if(n=='4' && ((c1=='T')||(c2=='T')||(c1=='C')||(c2=='C'))){
-            lista.add(l);
-            continue;
-        }
-        //TG = 5
-        if(n=='5' && ((c1=='T')||(c2=='T')||(c1=='G')||(c2=='G'))){
-            lista.add(l);
-            continue;
-        }
-        //CG = 6
-        if(n=='6' && ((c1=='C')||(c2=='C')||(c1=='G')||(c2=='G'))){
-            lista.add(l);
-            continue;
-        }
-        //TCG = 7
-        if(n=='7' && ((c1!='A')||(c2!='A'))){
-            lista.add(l);
-            continue;
-        }
-        //ACG = 8
-        if(n=='8' && ((c1!='T')||(c2!='T'))){
-            lista.add(l);
-            continue;
-        }
-        //ATG = 9
-        if(n=='9' && ((c1!='C')||(c2!='C'))){
-            lista.add(l);
-            continue;
-        }
-        //ATC = 0
-        if(n=='0' && ((c1!='G')||(c2!='G'))){
-            lista.add(l);
-        }
-    }
-    
-    return lista;
-} 
+    private ArrayList<Integer> getBestL1(double[] res) {
 
-        
-        
-        
-        
-        
-        
+        return null;
+    }
+
+    private double[] getConsesus(ArrayList<ArrayList<Integer>> l1, int size, int gene) {
+        int tam2 = this.ref.id[gene].length;
+        int phenoCount[] = new int[tam2];
+        int tam = l1.size();
+        for (int i = 0; i < tam; i++) {
+            for (int a : l1.get(i)) {
+                phenoCount[a]++;
+            }
+
+        }
+
+        double[] res = new double[tam2];
+
+        for (int i = 0; i < tam2; i++) {
+            res[i] = (double) phenoCount[i] / tam;
+        }
+        return res;
+    }
+
+    private ArrayList<Integer> L1(char c1, char c2, int indexPos, int gene) {
+        ArrayList<Integer> lista = new ArrayList();
+        int tam = this.ref.seq1[gene].length;
+        for (int l = 0; l < tam; l++) {
+            char n = this.ref.seq1[gene][l].charAt(indexPos);
+            if (n == '*') {
+                lista.add(l);
+                continue;
+            }
+            if (n == c1 || n == c2) {
+                lista.add(l);
+                continue;
+            }
+            //AT = 1
+            if (n == '1' && ((c1 == 'A') || (c2 == 'A') || (c1 == 'T') || (c2 == 'T'))) {
+                lista.add(l);
+                continue;
+            }
+            //AC = 2
+            if (n == '2' && ((c1 == 'A') || (c2 == 'A') || (c1 == 'C') || (c2 == 'C'))) {
+                lista.add(l);
+                continue;
+            }
+            //AG = 3
+            if (n == '3' && ((c1 == 'A') || (c2 == 'A') || (c1 == 'G') || (c2 == 'G'))) {
+                lista.add(l);
+                continue;
+            }
+            //TC = 4
+            if (n == '4' && ((c1 == 'T') || (c2 == 'T') || (c1 == 'C') || (c2 == 'C'))) {
+                lista.add(l);
+                continue;
+            }
+            //TG = 5
+            if (n == '5' && ((c1 == 'T') || (c2 == 'T') || (c1 == 'G') || (c2 == 'G'))) {
+                lista.add(l);
+                continue;
+            }
+            //CG = 6
+            if (n == '6' && ((c1 == 'C') || (c2 == 'C') || (c1 == 'G') || (c2 == 'G'))) {
+                lista.add(l);
+                continue;
+            }
+            //TCG = 7
+            if (n == '7' && ((c1 != 'A') || (c2 != 'A'))) {
+                lista.add(l);
+                continue;
+            }
+            //ACG = 8
+            if (n == '8' && ((c1 != 'T') || (c2 != 'T'))) {
+                lista.add(l);
+                continue;
+            }
+            //ATG = 9
+            if (n == '9' && ((c1 != 'C') || (c2 != 'C'))) {
+                lista.add(l);
+                continue;
+            }
+            //ATC = 0
+            if (n == '0' && ((c1 != 'G') || (c2 != 'G'))) {
+                lista.add(l);
+            }
+        }
+
+        return lista;
+    }
+
 }
