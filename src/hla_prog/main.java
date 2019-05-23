@@ -26,7 +26,8 @@ public class main {
        // Ref nRef = new Ref(ref);
        // Leitor.save(nRef);
        Banco b = new Banco("C:/Users/rafael.veiga/Documents/bancos/epigen5M_chr6.ped", "C:/Users/rafael.veiga/Documents/bancos/epigen5M_chr6.map",Leitor.load() );
-        b.execute("C:/Users/rafael.veiga/Documents/bancos/saida.csv");
+       
+        //b.execute("C:/Users/rafael.veiga/Documents/bancos/saida.csv");
 //        Ref data =Leitor.load();
 //        System.out.println("");
         //ref.createFasta("C:/Users/rafael.veiga/Desktop/HLA/descricao/referencia_37.txt");
