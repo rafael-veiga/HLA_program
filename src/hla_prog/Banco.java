@@ -8,6 +8,7 @@ package hla_prog;
 import hla_prog.MakeRef.Ref;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -27,9 +29,13 @@ public class Banco {
     private char seq[][][];// [2][ind][snps]
     private Ref ref;
     private Pheno fenotipo[][]; //[ind][gene]
+    private JTextArea janela_saida;
+    private StringBuilder saidaTex;
 
-    public Banco(String arqPed, String arqMap, Ref ref) {
+    public Banco(File arqPed, File arqMap, Ref ref,JTextArea janela_saida,StringBuilder saidaTex) {
         this.ref = ref;
+        this.janela_saida = janela_saida;
+        this.saidaTex = saidaTex;
         try {
             BufferedReader ler = new BufferedReader(new FileReader(arqMap));
             String linha = ler.readLine();
@@ -100,7 +106,7 @@ public class Banco {
                int lim[] = this.getMinMax(g);
                
             }
-            
+            this.saidaTex.append("");
             
         } catch (FileNotFoundException ex) {
             System.err.println("Error acess file");

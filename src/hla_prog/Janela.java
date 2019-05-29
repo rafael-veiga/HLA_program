@@ -18,15 +18,19 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class Janela extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Janela
-     */
+    private StringBuilder saidaTex;
+    private File arqPed = null;
+    private File arqMap = null;
+    private Ref ref;
+    
     public Janela() {
         initComponents();
-        janela_saida.setText("Open reference data\n");
+        saidaTex = new StringBuilder("Open reference data\n");
+        janela_saida.setText(saidaTex.toString());
         janela_saida.setEditable(false);
-        Ref ref =  Leitor.load();
-        janela_saida.setText("Open reference data\nDone\n");
+        ref =  Leitor.load();
+        saidaTex.append("Done\n");
+        janela_saida.setText(saidaTex.toString());
     }
 
     /**
@@ -42,6 +46,10 @@ public class Janela extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         janela_saida = new javax.swing.JTextArea();
         jButton1 = new javax.swing.JButton();
+        label_ped = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
+        label_map = new javax.swing.JLabel();
+        BotaoExecutar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -57,39 +65,72 @@ public class Janela extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setText("Open Map");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 138, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(37, 37, 37)
-                .addComponent(jButton1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(label_map, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1)
+                            .addComponent(label_ped, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(label_ped))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2)
+                    .addComponent(label_map))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(22, 22, 22))
         );
+
+        BotaoExecutar.setText("Executar");
+        BotaoExecutar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotaoExecutarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(BotaoExecutar)
+                .addGap(134, 134, 134))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(37, 37, 37)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(60, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(BotaoExecutar)
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         pack();
@@ -102,12 +143,52 @@ public class Janela extends javax.swing.JFrame {
         FileNameExtensionFilter filter = new FileNameExtensionFilter( "Ped file", "ped"); 
         filechooser.setFileFilter(filter);
         if(filechooser.showOpenDialog(jButton1)==JFileChooser.APPROVE_OPTION){
-          File arq = filechooser.getSelectedFile(); 
-          janela_saida.setText("Open reference data\nDone\napertado\n"+arq.getName());
+          arqPed = filechooser.getSelectedFile();
+         label_ped.setText(arqPed.getName());
+        }else{
+            arqPed=null;
+            label_ped.setText("");
         }
         
         
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+      JFileChooser filechooser = new JFileChooser();
+        filechooser.setCurrentDirectory(new File("."));
+        filechooser.setDialogTitle("Open Map file");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter( "Map file", "map"); 
+        filechooser.setFileFilter(filter);
+        if(filechooser.showOpenDialog(jButton2)==JFileChooser.APPROVE_OPTION){
+          arqMap = filechooser.getSelectedFile();
+         label_map.setText(arqMap.getName());
+        }else{
+            arqMap=null;
+            label_map.setText("");
+        } 
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void BotaoExecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoExecutarActionPerformed
+        boolean tag=true;
+        if(arqMap==null){
+            saidaTex.append("File map is empty\n");
+            janela_saida.setText(saidaTex.toString());
+            tag=false;
+        }
+        if(arqPed==null){
+            saidaTex.append("File ped is empty\n");
+            janela_saida.setText(saidaTex.toString());
+            tag=false;
+        }
+        
+        if(tag){
+            saidaTex.append("load data files\n");
+            janela_saida.setText(saidaTex.toString());
+            Banco b = new Banco(arqPed, arqMap, ref,janela_saida,saidaTex);
+            saidaTex.append("load data files Done\n");
+            janela_saida.setText(saidaTex.toString());
+        }
+    }//GEN-LAST:event_BotaoExecutarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -146,9 +227,13 @@ public class Janela extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BotaoExecutar;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea janela_saida;
+    private javax.swing.JLabel label_map;
+    private javax.swing.JLabel label_ped;
     // End of variables declaration//GEN-END:variables
 }
