@@ -24,9 +24,10 @@ import javax.swing.JTextArea;
  */
 public class Banco {
 
-    private int pos[];  //[snps]
+   // private int pos[];  //[snps]
     private String id[]; //[ind]
-    private char seq[][][];// [2][ind][snps]
+    private Gene genes[];
+    //private char seq[][][];// [2][ind][snps]
     private Ref ref;
     private Pheno fenotipo[][]; //[ind][gene]
     private JTextArea janela_saida;
@@ -64,10 +65,10 @@ public class Banco {
 
             // long estimatedTime = System.currentTimeMillis() - startTime;
             ler.close();
-            this.pos = new int[posLista.size()];
-            for (int i = 0; i < posLista.size(); i++) {
-                this.pos[i] = posLista.get(i);
-            }
+//            this.pos = new int[posLista.size()];
+//            for (int i = 0; i < posLista.size(); i++) {
+//                this.pos[i] = posLista.get(i);
+//            }
 
             //ped
             ler = new BufferedReader(new FileReader(arqPed));
@@ -82,7 +83,7 @@ public class Banco {
                 a = linha.indexOf(' ', a) + 1;
                 a = linha.indexOf(' ', a) + 1;
                 a = linha.indexOf(' ', a) + 1;
-                this.setSeq(seqList, linha.substring(a), this.pos.length);
+                this.setSeq(seqList, linha.substring(a), posLista.size());
 
                 linha = ler.readLine();
             }
@@ -90,24 +91,29 @@ public class Banco {
             //  long estimatedTime = System.currentTimeMillis() - startTime;
             ler.close();
             int tam = idList.size();
-            int tam2 = pos.length;
-            this.seq = new char[2][tam][tam2];
-            this.id = new String[tam];
-            for (int i = 0; i < tam; i++) {
-                id[i] = idList.get(i);
-                for (int j = 0; j < tam2; j++) {
-                    this.seq[0][i][j] = seqList[0].get(i)[j];
-                    this.seq[1][i][j] = seqList[1].get(i)[j];
-                }
-            }
+            int tam2 = posLista.size();
+//            this.seq = new char[2][tam][tam2];
+//            this.id = new String[tam];
+//            for (int i = 0; i < tam; i++) {
+//                id[i] = idList.get(i);
+//                for (int j = 0; j < tam2; j++) {
+//                    this.seq[0][i][j] = seqList[0].get(i)[j];
+//                    this.seq[1][i][j] = seqList[1].get(i)[j];
+//                }
+//            }
             int tamGene = this.ref.genes.length;
-            this.fenotipo = new Pheno[this.id.length][tamGene];
-            for(int g=0;g<tamGene;g++){
-               int lim[] = this.getMinMax(g);
-               
+            this.fenotipo = new Pheno[idList.size()][tamGene];
+           
+            this.saidaTex.append("Database contains "+idList.size() +" individuals\nDatabase contains " + posLista.size()+ " SNPs\n");
+            this.janela_saida.setText(this.saidaTex.toString());
+            //posLista = pos[]
+            this.genes = new Gene[this.ref.genes.length];
+            tam = this.genes.length;
+            for(int i=0;i<tam;i++){
+                this.genes[i] = new Gene(ref, i);
+                this.genes[i].getSNPs(seqList, posLista,i);
+                saidaTex.append("gene "+ref.genes[i]+"\nmin: "+this.genes[i].minPos+" max: "+this.genes[i].maxPos + "\n");
             }
-            this.saidaTex.append("");
-            
         } catch (FileNotFoundException ex) {
             System.err.println("Error acess file");
             System.exit(1);
@@ -131,119 +137,103 @@ public class Banco {
         lista[1].add(seq2);
     }
 
-    public void execute(String arqOut) {
-        try {
-            BufferedWriter saida = new BufferedWriter(new FileWriter(arqOut));
-            saida.append("reg");
-            ArrayList<Integer> snpList[] = new ArrayList[this.ref.genes.length];
-            int tamSnp = this.pos.length;
-            int tamGene = this.ref.genes.length;
-            for (int g = 0; g < tamGene; g++) {
-                snpList[g] = new ArrayList();
-                int extremos[] = this.getMinMax(g);
-
-                for (int i = 0; i < tamSnp; i++) {
-                    if (pos[i] >= extremos[0] && pos[i] <= extremos[1]) {
-                        snpList[g].add(i);
-                    }
-                }
-
-            }
-            for (int g = 0; g < tamGene; g++) {
-                if (snpList[g].size() > 0) {
-                    saida.append(";" + this.ref.genes[g]);
-                } else {
-                    System.out.println("no snp in gene: " + this.ref.genes[g]);
-                }
-
-            }
-            saida.append("\n");
-
-            int tamInd = this.id.length;
-            for (int ind = 0; ind < tamInd; ind++) {
-                saida.append(this.id[ind]);
-                for (int g = 0; g < tamGene; g++) {
-                    if (snpList[g].size() > 0) {
-                        String s = this.getPheno(snpList[g], g, ind);
-                        saida.append(";" + s);
-                    }
-                }
-                saida.append("\n");
-
-            }
-
-            saida.close();
-        } catch (IOException ex) {
-            System.err.println("file error! is not possible to write a output file!");
-            System.exit(1);
-        }
-
-    }
-
-    private int[] getMinMax(int g) {
-        int value[] = new int[2];
-        value[0] = ref.pos[g][0];
-        value[1] = ref.pos[g][0];
-        for (int v : ref.pos[g]) {
-            if (v != 0) {
-                if (value[0] > v) {
-                    value[0] = v;
-                }
-                if (value[1] < v) {
-                    value[1] = v;
-                }
-            }
-        }
-
-        return value;
-    }
-
-    private String getPheno(ArrayList<Integer> snpList, int gene, int ind) {
-        int tamL1 = this.ref.seq1[gene].length;
-        StringBuilder res = new StringBuilder();
-        ArrayList<ArrayList<Integer>> l1 = new ArrayList();
-        int indexPos[] = new int[snpList.size()];
-        //for (int snp : snpList) {
-        for (int i = 0; i < indexPos.length; i++) {
-
-            char c1 = this.seq[0][ind][snpList.get(i)];
-            char c2 = this.seq[1][ind][snpList.get(i)];
-            int pos = this.pos[snpList.get(i)];
-            indexPos[i] = this.ref.getIndexPos(pos, gene);
-            if (indexPos[i] >= 0) {
-
-                l1.add(L1(c1, c2, indexPos[i], gene));
-
-            }
-        }
-
-        double valor[] = getConsesus(l1, snpList.size(), gene);
-        ArrayList<Integer> lista = getBestL1(valor);
-
-        res.append(ref.id[gene][lista.get(0)] + "(" + valor[lista.get(0)] + ")");
-        for (int numL1 = 1; numL1 < lista.size(); numL1++) {
-            res.append(":" + ref.id[gene][lista.get(numL1)] + "(" + valor[lista.get(numL1)] + ")");
-        }
-
-        
-        
-        for (int numL1 = 1; numL1 < lista.size(); numL1++) {
-//            ArrayList<ArrayList<Integer>> l2 = new ArrayList();
-//            for (int i = 0; i < indexPos.length; i++) {
-//                char c1 = this.seq[0][ind][snpList.get(i)];
-//                char c2 = this.seq[1][ind][snpList.get(i)];
-//                if (indexPos[i] >= 0) {
+//    public void execute(String arqOut) {
+//        try {
+//            BufferedWriter saida = new BufferedWriter(new FileWriter(arqOut));
+//            saida.append("reg");
+//            ArrayList<Integer> snpList[] = new ArrayList[this.ref.genes.length];
+//            int tamSnp = this.pos.length;
+//            int tamGene = this.ref.genes.length;
+//            for (int g = 0; g < tamGene; g++) {
+//                snpList[g] = new ArrayList();
+//                int extremos[] = this.getMinMax(g);
 //
-//                    l2.add(L2(c1, c2, indexPos[i], gene,numL1));
+//                for (int i = 0; i < tamSnp; i++) {
+//                    if (pos[i] >= extremos[0] && pos[i] <= extremos[1]) {
+//                        snpList[g].add(i);
+//                    }
 //                }
+//
 //            }
-//            
-//             valor = getConsesus2(l1, snpList.size(), gene,numL1);
-//// continua
-        }
+//            for (int g = 0; g < tamGene; g++) {
+//                if (snpList[g].size() > 0) {
+//                    saida.append(";" + this.ref.genes[g]);
+//                } else {
+//                    System.out.println("no snp in gene: " + this.ref.genes[g]);
+//                }
+//
+//            }
+//            saida.append("\n");
+//
+//            int tamInd = this.id.length;
+//            for (int ind = 0; ind < tamInd; ind++) {
+//                saida.append(this.id[ind]);
+//                for (int g = 0; g < tamGene; g++) {
+//                    if (snpList[g].size() > 0) {
+//                        String s = this.getPheno(snpList[g], g, ind);
+//                        saida.append(";" + s);
+//                    }
+//                }
+//                saida.append("\n");
+//
+//            }
+//
+//            saida.close();
+//        } catch (IOException ex) {
+//            System.err.println("file error! is not possible to write a output file!");
+//            System.exit(1);
+//        }
+//
+//    }
 
-        return res.toString();
-    }
+    
+
+//    private String getPheno(ArrayList<Integer> snpList, int gene, int ind) {
+//        int tamL1 = this.ref.seq1[gene].length;
+//        StringBuilder res = new StringBuilder();
+//        ArrayList<ArrayList<Integer>> l1 = new ArrayList();
+//        int indexPos[] = new int[snpList.size()];
+//        //for (int snp : snpList) {
+//        for (int i = 0; i < indexPos.length; i++) {
+//
+//            char c1 = this.seq[0][ind][snpList.get(i)];
+//            char c2 = this.seq[1][ind][snpList.get(i)];
+//            int pos = this.pos[snpList.get(i)];
+//            indexPos[i] = this.ref.getIndexPos(pos, gene);
+//            if (indexPos[i] >= 0) {
+//
+//                l1.add(L1(c1, c2, indexPos[i], gene));
+//
+//            }
+//        }
+//
+//        double valor[] = getConsesus(l1, snpList.size(), gene);
+//        ArrayList<Integer> lista = getBestL1(valor);
+//
+//        res.append(ref.id[gene][lista.get(0)] + "(" + valor[lista.get(0)] + ")");
+//        for (int numL1 = 1; numL1 < lista.size(); numL1++) {
+//            res.append(":" + ref.id[gene][lista.get(numL1)] + "(" + valor[lista.get(numL1)] + ")");
+//        }
+//
+//        
+//        
+//        for (int numL1 = 1; numL1 < lista.size(); numL1++) {
+////            ArrayList<ArrayList<Integer>> l2 = new ArrayList();
+////            for (int i = 0; i < indexPos.length; i++) {
+////                char c1 = this.seq[0][ind][snpList.get(i)];
+////                char c2 = this.seq[1][ind][snpList.get(i)];
+////                if (indexPos[i] >= 0) {
+////
+////                    l2.add(L2(c1, c2, indexPos[i], gene,numL1));
+////                }
+////            }
+////            
+////             valor = getConsesus2(l1, snpList.size(), gene,numL1);
+////// continua
+//        }
+//
+//        return res.toString();
+//    }
     private double[] getConsesus2(ArrayList<ArrayList<Integer>> l2, int size, int gene,int numL1) {
         int tam2 = this.ref.id2[gene][numL1].length;
         int phenoCount[] = new int[tam2];
