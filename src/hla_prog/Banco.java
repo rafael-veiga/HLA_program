@@ -113,6 +113,7 @@ public class Banco {
                 this.genes[i] = new Gene(ref, i);
                 this.genes[i].getSNPs(seqList, posLista,i);
                 saidaTex.append("gene "+ref.genes[i]+"\nmin: "+this.genes[i].minPos+" max: "+this.genes[i].maxPos + "\n");
+                saidaTex.append("Snps in gene: " + this.genes[i].base1[0].length + "\n");
             }
         } catch (FileNotFoundException ex) {
             System.err.println("Error acess file");

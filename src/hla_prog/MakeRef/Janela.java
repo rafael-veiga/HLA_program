@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hla_prog;
+package hla_prog.MakeRef;
 
 
+import hla_prog.Banco;
 import hla_prog.MakeRef.Leitor;
 import hla_prog.MakeRef.Ref;
 import java.io.File;

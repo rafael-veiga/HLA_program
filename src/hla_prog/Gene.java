@@ -41,8 +41,9 @@ public class Gene {
         }
         valor = ipos.size();
         indexPos = new int[valor];
-        base1 = new char[seqList.length][valor];
-        base2 = new char[seqList.length][valor];
+        int tam = seqList[0].size();
+        base1 = new char[tam][valor];
+        base2 = new char[tam][valor];
         for(int i=0;i<valor;i++){
             indexPos[i] = ref.getIndexPos(posLista.get(ipos.get(i)), indexGene);
             for(int ind =0;ind<seqList.length;ind++){
