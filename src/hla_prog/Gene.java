@@ -19,18 +19,18 @@ public class Gene {
     public int indexPos[];
     public final int minPos;
     public final int maxPos;
-    private final Ref ref;
+    //private final Ref ref;
 
     public Gene(Ref ref, int index) {
 
         int[] val = getMinMax(index, ref);
         this.minPos = val[0];
         this.maxPos = val[1];
-        this.ref = ref;
+        //this.ref = ref;
 
     }
 
-    public void getSNPs(ArrayList<Character[]> seqList[], ArrayList<Integer> posLista, int indexGene) {
+    public void getSNPs(ArrayList<Character[]> seqList[], ArrayList<Integer> posLista, int indexGene,Ref ref) {
         ArrayList<Integer> ipos = new ArrayList();
         int valor;
         for (int i = 0; i < posLista.size(); i++) {
@@ -48,9 +48,11 @@ public class Gene {
             indexPos[i] = ref.getIndexPos(posLista.get(ipos.get(i)), indexGene);
             for(int ind =0;ind<seqList.length;ind++){
                 base1[ind][i] = seqList[0].get(ind)[i];
-                base1[ind][i] = seqList[0].get(ind)[i];
+                base2[ind][i] = seqList[1].get(ind)[i];
             }
         }
+        
+        
         
     }
 

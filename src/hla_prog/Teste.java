@@ -23,6 +23,8 @@ public class Teste {
         StringBuilder saidaTex = new StringBuilder();
         javax.swing.JTextArea janela_saida = new JTextArea();
         Banco b = new Banco(arqPed, arqMap, ref,janela_saida,saidaTex);
+        b.execute();
+        System.err.println("");
     }
     
 }
