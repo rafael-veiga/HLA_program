@@ -30,6 +30,7 @@ public class Pheno {
         int tamL1;
         int tamL2;
         int contL1;
+        int missing;
 
         tamL1 = ref.id[g].length;
         this.resultL1 = new double[tamL1];
@@ -40,19 +41,25 @@ public class Pheno {
             tamSnp = gene.indexPos.length;
             count = 0;
             contL1 = 0;
+            missing = 0;
             for (int i = 0; i < tamSnp; i++) {
                 a1 = gene.base1[ind][i];
                 a2 = gene.base2[ind][i];
                 pos = gene.indexPos[i];
+
                 if (pos >= 0) {
-                    count++;
-                    cref = ref.seq1[g][l1].charAt(pos);
-                    if (phenoGet(a1, a2, cref)) {
-                        contL1++;
+                    if (a1 == '0' || a2 == '0') {
+                        missing++;
+                    } else {
+                        count++;
+                        cref = ref.seq1[g][l1].charAt(pos);
+                        if (phenoGet(a1, a2, cref)) {
+                            contL1++;
+                        }
                     }
                 }
             }
-            total = count;
+            total = count+missing;
             numL1[l1] = contL1;
             this.resultL1[l1] = (double) contL1 / count;
 
@@ -63,15 +70,20 @@ public class Pheno {
                 this.resultL2[l1] = new double[tamL2];
                 count = 0;
                 contL1 = 0;
+                missing = 0;
                 for (int i = 0; i < tamSnp; i++) {
                     a1 = gene.base1[ind][i];
                     a2 = gene.base2[ind][i];
                     pos = gene.indexPos[i];
                     if (pos >= 0) {
-                        count++;
-                        cref = ref.seq2[g][l1][l2].charAt(pos);
-                        if (phenoGet(a1, a2, cref)) {
-                            contL1++;
+                        if (a1 == '0' || a2 == '0') {
+                            missing++;
+                        } else {
+                            count++;
+                            cref = ref.seq2[g][l1][l2].charAt(pos);
+                            if (phenoGet(a1, a2, cref)) {
+                                contL1++;
+                            }
                         }
                     }
                 }

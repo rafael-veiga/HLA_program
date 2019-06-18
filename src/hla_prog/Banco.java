@@ -52,10 +52,9 @@ public class Banco {
             // long startTime = System.currentTimeMillis();
             linha = ler.readLine();
             while (linha != null) {
-                a = 2;
-                a = linha.indexOf('\t', a);
-                a = linha.indexOf('\t', ++a);
-                posLista.add(Integer.parseInt(linha.substring(++a, linha.length())));
+                aux = linha.split("[\\s]");
+                
+                posLista.add(Integer.parseInt(aux[3]));
                 linha = ler.readLine();
             }
             ArrayList<String> idList = new ArrayList();
@@ -151,260 +150,52 @@ public class Banco {
             }
         }
     }
-
-//    private String getPheno(ArrayList<Integer> snpList, int gene, int ind) {
-//        int tamL1 = this.ref.seq1[gene].length;
-//        StringBuilder res = new StringBuilder();
-//        ArrayList<ArrayList<Integer>> l1 = new ArrayList();
-//        int indexPos[] = new int[snpList.size()];
-//        //for (int snp : snpList) {
-//        for (int i = 0; i < indexPos.length; i++) {
-//
-//            char c1 = this.seq[0][ind][snpList.get(i)];
-//            char c2 = this.seq[1][ind][snpList.get(i)];
-//            int pos = this.pos[snpList.get(i)];
-//            indexPos[i] = this.ref.getIndexPos(pos, gene);
-//            if (indexPos[i] >= 0) {
-//
-//                l1.add(L1(c1, c2, indexPos[i], gene));
-//
-//            }
-//        }
-//
-//        double valor[] = getConsesus(l1, snpList.size(), gene);
-//        ArrayList<Integer> lista = getBestL1(valor);
-//
-//        res.append(ref.id[gene][lista.get(0)] + "(" + valor[lista.get(0)] + ")");
-//        for (int numL1 = 1; numL1 < lista.size(); numL1++) {
-//            res.append(":" + ref.id[gene][lista.get(numL1)] + "(" + valor[lista.get(numL1)] + ")");
-//        }
-//
-//        
-//        
-//        for (int numL1 = 1; numL1 < lista.size(); numL1++) {
-////            ArrayList<ArrayList<Integer>> l2 = new ArrayList();
-////            for (int i = 0; i < indexPos.length; i++) {
-////                char c1 = this.seq[0][ind][snpList.get(i)];
-////                char c2 = this.seq[1][ind][snpList.get(i)];
-////                if (indexPos[i] >= 0) {
-////
-////                    l2.add(L2(c1, c2, indexPos[i], gene,numL1));
-////                }
-////            }
-////            
-////             valor = getConsesus2(l1, snpList.size(), gene,numL1);
-////// continua
-//        }
-//
-//        return res.toString();
-//    }
-    private double[] getConsesus2(ArrayList<ArrayList<Integer>> l2, int size, int gene, int numL1) {
-        int tam2 = this.ref.id2[gene][numL1].length;
-        int phenoCount[] = new int[tam2];
-        int tam = l2.size();
-        for (int i = 0; i < tam; i++) {
-            for (int a : l2.get(i)) {
-                phenoCount[a]++;
+    
+    
+    public void printDebug(String arq){
+        try {
+            BufferedWriter saida = new BufferedWriter(new FileWriter(arq));
+            saida.append("Identificador");
+            int tamSNP = ref.pos[0].length;
+            for(int i=0;i<tamSNP;i++){
+                saida.append(";"+ref.pos[0][i]);
             }
-
+            saida.append("\n");
+            saida.append("ref");
+           for(int i=0;i<tamSNP;i++){
+               saida.append(";"+ref.seq1[0][0].charAt(i));
+           }
+           saida.append("\n");
+           int tamId = this.id.length;
+           for(int i=0;i<tamId;i++){
+               saida.append(this.id[i]);
+               int count=0;
+               for(int s=0;s<tamSNP;s++){
+                   if(count<this.genes[0].indexPos.length){
+                   int pos = this.genes[0].indexPos[count];
+                    if(s==pos){
+                       saida.append(";"+this.genes[0].base1[i][count]+"|"+this.genes[0].base2[i][count]);
+                       count++;
+                       
+                   }else{
+                       saida.append(";-");
+                   }
+                   }else{
+                      saida.append(";-"); 
+                   }
+                  
+               }
+               saida.append("\n");
+           }
+           
+           
+            saida.close();
+                    } catch (IOException ex) {
+            Logger.getLogger(Banco.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        double[] res = new double[tam2];
-
-        for (int i = 0; i < tam2; i++) {
-            res[i] = (double) phenoCount[i] / tam;
-        }
-        return res;
     }
-
-    private ArrayList<Integer> L2(char c1, char c2, int indexPos, int gene, int numL1) {
-        ArrayList<Integer> lista = new ArrayList();
-        int tam = this.ref.seq2[gene][numL1].length;
-        for (int l = 0; l < tam; l++) {
-            char n = this.ref.seq2[gene][numL1][l].charAt(indexPos);
-            if (n == '*') {
-                lista.add(l);
-                continue;
-            }
-            if (n == c1 || n == c2) {
-                lista.add(l);
-                continue;
-            }
-            //AT = 1
-            if (n == '1' && ((c1 == 'A') || (c2 == 'A') || (c1 == 'T') || (c2 == 'T'))) {
-                lista.add(l);
-                continue;
-            }
-            //AC = 2
-            if (n == '2' && ((c1 == 'A') || (c2 == 'A') || (c1 == 'C') || (c2 == 'C'))) {
-                lista.add(l);
-                continue;
-            }
-            //AG = 3
-            if (n == '3' && ((c1 == 'A') || (c2 == 'A') || (c1 == 'G') || (c2 == 'G'))) {
-                lista.add(l);
-                continue;
-            }
-            //TC = 4
-            if (n == '4' && ((c1 == 'T') || (c2 == 'T') || (c1 == 'C') || (c2 == 'C'))) {
-                lista.add(l);
-                continue;
-            }
-            //TG = 5
-            if (n == '5' && ((c1 == 'T') || (c2 == 'T') || (c1 == 'G') || (c2 == 'G'))) {
-                lista.add(l);
-                continue;
-            }
-            //CG = 6
-            if (n == '6' && ((c1 == 'C') || (c2 == 'C') || (c1 == 'G') || (c2 == 'G'))) {
-                lista.add(l);
-                continue;
-            }
-            //TCG = 7
-            if (n == '7' && ((c1 != 'A') || (c2 != 'A'))) {
-                lista.add(l);
-                continue;
-            }
-            //ACG = 8
-            if (n == '8' && ((c1 != 'T') || (c2 != 'T'))) {
-                lista.add(l);
-                continue;
-            }
-            //ATG = 9
-            if (n == '9' && ((c1 != 'C') || (c2 != 'C'))) {
-                lista.add(l);
-                continue;
-            }
-            //ATC = 0
-            if (n == '0' && ((c1 != 'G') || (c2 != 'G'))) {
-                lista.add(l);
-            }
-        }
-
-        return lista;
-    }
-
-    private ArrayList<Integer> getBestL1(double[] res) {
-        double num1 = 0.0;
-        double num2 = 0.0;
-
-        ArrayList<Integer> list = new ArrayList();
-
-        if (res.length == 1) {
-            list.add(0);
-            return list;
-        }
-        for (double d : res) {
-            if (d > num1) {
-                num2 = num1;
-                num1 = d;
-            }
-            if (d < num1 && d > num2) {
-                num2 = d;
-            }
-
-        }
-        for (int i = 0; i < res.length; i++) {
-            if (res[i] == num1) {
-                list.add(i);
-            }
-        }
-        if (list.size() > 1) {
-            return list;
-        }
-        for (int i = 0; i < res.length; i++) {
-            if (res[i] == num2) {
-                list.add(i);
-            }
-        }
-
-        return list;
-    }
-
-    private double[] getConsesus(ArrayList<ArrayList<Integer>> l1, int size, int gene) {
-        int tam2 = this.ref.id[gene].length;
-        int phenoCount[] = new int[tam2];
-        int tam = l1.size();
-        for (int i = 0; i < tam; i++) {
-            for (int a : l1.get(i)) {
-                phenoCount[a]++;
-            }
-
-        }
-
-        double[] res = new double[tam2];
-
-        for (int i = 0; i < tam2; i++) {
-            res[i] = (double) phenoCount[i] / tam;
-        }
-        return res;
-    }
-
-    private ArrayList<Integer> L1(char c1, char c2, int indexPos, int gene) {
-        ArrayList<Integer> lista = new ArrayList();
-        int tam = this.ref.seq1[gene].length;
-        for (int l = 0; l < tam; l++) {
-            char n = this.ref.seq1[gene][l].charAt(indexPos);
-            if (n == '*') {
-                lista.add(l);
-                continue;
-            }
-            if (n == c1 || n == c2) {
-                lista.add(l);
-                continue;
-            }
-            //AT = 1
-            if (n == '1' && ((c1 == 'A') || (c2 == 'A') || (c1 == 'T') || (c2 == 'T'))) {
-                lista.add(l);
-                continue;
-            }
-            //AC = 2
-            if (n == '2' && ((c1 == 'A') || (c2 == 'A') || (c1 == 'C') || (c2 == 'C'))) {
-                lista.add(l);
-                continue;
-            }
-            //AG = 3
-            if (n == '3' && ((c1 == 'A') || (c2 == 'A') || (c1 == 'G') || (c2 == 'G'))) {
-                lista.add(l);
-                continue;
-            }
-            //TC = 4
-            if (n == '4' && ((c1 == 'T') || (c2 == 'T') || (c1 == 'C') || (c2 == 'C'))) {
-                lista.add(l);
-                continue;
-            }
-            //TG = 5
-            if (n == '5' && ((c1 == 'T') || (c2 == 'T') || (c1 == 'G') || (c2 == 'G'))) {
-                lista.add(l);
-                continue;
-            }
-            //CG = 6
-            if (n == '6' && ((c1 == 'C') || (c2 == 'C') || (c1 == 'G') || (c2 == 'G'))) {
-                lista.add(l);
-                continue;
-            }
-            //TCG = 7
-            if (n == '7' && ((c1 != 'A') || (c2 != 'A'))) {
-                lista.add(l);
-                continue;
-            }
-            //ACG = 8
-            if (n == '8' && ((c1 != 'T') || (c2 != 'T'))) {
-                lista.add(l);
-                continue;
-            }
-            //ATG = 9
-            if (n == '9' && ((c1 != 'C') || (c2 != 'C'))) {
-                lista.add(l);
-                continue;
-            }
-            //ATC = 0
-            if (n == '0' && ((c1 != 'G') || (c2 != 'G'))) {
-                lista.add(l);
-            }
-        }
-
-        return lista;
-    }
-
+    
 }
+
+
+   

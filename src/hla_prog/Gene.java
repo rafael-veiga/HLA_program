@@ -36,6 +36,7 @@ public class Gene {
         for (int i = 0; i < posLista.size(); i++) {
             valor = posLista.get(i);
             if (valor >= this.minPos && valor <= this.maxPos) {
+                
                 ipos.add(i);
             }
         }
@@ -46,7 +47,8 @@ public class Gene {
         base2 = new char[tam][valor];
         for(int i=0;i<valor;i++){
             indexPos[i] = ref.getIndexPos(posLista.get(ipos.get(i)), indexGene);
-            for(int ind =0;ind<seqList.length;ind++){
+            int tamId = seqList[0].size();
+            for(int ind =0;ind<tamId;ind++){
                 base1[ind][i] = seqList[0].get(ind)[i];
                 base2[ind][i] = seqList[1].get(ind)[i];
             }
