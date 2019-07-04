@@ -93,9 +93,9 @@ public class CriarRef {
         return res;
     }
 
-    public CriarRef() {
-        File pasta = new File("config");
-        File arqs[] = pasta.listFiles();
+    public CriarRef(File arq) {
+        
+        
         int b, a;
         ArrayList<Boolean> invertido = new ArrayList();
         ArrayList<Boolean> complemento = new ArrayList();
@@ -104,7 +104,7 @@ public class CriarRef {
         ArrayList<String> sequencias = new ArrayList();
         try {
 
-            BufferedReader config = new BufferedReader(new FileReader(arqs[0]));
+            BufferedReader config = new BufferedReader(new FileReader(arq));
             String lin = config.readLine();
             this.nome = lin;
             lin = config.readLine();
@@ -185,6 +185,7 @@ public class CriarRef {
                 this.seq[1][i] = new String(sequencias.get(i).substring(a + 1));
                 this.bancos[i].setPosIni(posicao.get(i));
             }
+        
 
         } catch (FileNotFoundException ex) {
             System.err.println("Error no found config file : example: \"config/GRCh37p13.txt\"");
@@ -193,6 +194,7 @@ public class CriarRef {
             System.err.println("Error can not open config file : example: \"config/GRCh37p13.txt\"");
             System.exit(1);
         }
+        
 
     }
 

@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,7 +23,7 @@ import javax.swing.JTextArea;
  *
  * @author rafael.veiga
  */
-public class Banco {
+public class Banco implements Serializable{
 
     // private int pos[];  //[snps]
     private String id[]; //[ind]
@@ -224,6 +225,10 @@ public class Banco {
         }
     }
     
+    
+    public Pheno[][] getPheno(){
+        return this.fenotipo;
+    }
 }
 
 

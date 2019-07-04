@@ -6,12 +6,13 @@
 package hla_prog;
 
 import hla_prog.MakeRef.Ref;
+import java.io.Serializable;
 
 /**
  *
  * @author rafael.veiga
  */
-public class Pheno {
+public class Pheno implements Serializable{
 
     //[snps] pos snp in ref
     public double[] resultL1;//[l1]

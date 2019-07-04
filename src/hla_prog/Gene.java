@@ -6,6 +6,7 @@
 package hla_prog;
 
 import hla_prog.MakeRef.Ref;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -13,7 +14,7 @@ import java.util.Arrays;
  *
  * @author rafael.veiga
  */
-public class Gene {
+public class Gene implements Serializable {
 
     public char base1[][];//[ind][snp]
     public char base2[][];//[ind][snp]
