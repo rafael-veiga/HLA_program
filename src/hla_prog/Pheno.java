@@ -31,6 +31,7 @@ public class Pheno {
         int tamL2;
         int contL1;
         int missing;
+  
 
         tamL1 = ref.id[g].length;
         this.resultL1 = new double[tamL1];
@@ -46,7 +47,8 @@ public class Pheno {
                 a1 = gene.base1[ind][i];
                 a2 = gene.base2[ind][i];
                 pos = gene.indexPos[i];
-
+                
+               // System.out.println(i + " teste");
                 if (pos >= 0) {
                     if (a1 == '0' || a2 == '0') {
                         missing++;
@@ -59,15 +61,16 @@ public class Pheno {
                     }
                 }
             }
-            total = count+missing;
+            total = count + missing;
             numL1[l1] = contL1;
             this.resultL1[l1] = (double) contL1 / count;
 
             // l2
             tamL2 = ref.id2[g][l1].length;
             this.numL2[l1] = new int[tamL2];
+            this.resultL2[l1] = new double[tamL2];
             for (int l2 = 0; l2 < tamL2; l2++) {
-                this.resultL2[l1] = new double[tamL2];
+                
                 count = 0;
                 contL1 = 0;
                 missing = 0;
@@ -75,6 +78,7 @@ public class Pheno {
                     a1 = gene.base1[ind][i];
                     a2 = gene.base2[ind][i];
                     pos = gene.indexPos[i];
+                   
                     if (pos >= 0) {
                         if (a1 == '0' || a2 == '0') {
                             missing++;

@@ -89,6 +89,8 @@ public class Banco {
 
             //  long estimatedTime = System.currentTimeMillis() - startTime;
             ler.close();
+            
+            //printPed("C:/Users/rafael.veiga/Documents/NetBeansProjects/printPed.csv", idList, posLista, seqList);
             int tam = idList.size();
             int tam2 = posLista.size();
 //            this.seq = new char[2][tam][tam2];
@@ -128,6 +130,33 @@ public class Banco {
 
     }
 
+//    private void printPed(String arq, ArrayList<String> idList,ArrayList<Integer> posLista, ArrayList<Character[]>[] seqList){
+//        try {
+//            BufferedWriter saida = new BufferedWriter(new FileWriter(arq));
+//            saida.append(";");
+//            int tamI = posLista.size();
+//            int tamL = idList.size();
+//            for(int i=0;i<tamI;i++){
+//                if(posLista.get(i)==299115450)
+//            saida.append(";"+posLista.get(i));
+//            }
+//            saida.newLine();
+//            for(int l=0;l<tamL;l++){
+//                saida.append(idList.get(l));
+//                for(int i=0;i<tamI;i++){
+//                     if(posLista.get(i)==29911545)
+//                    saida.append(";"+seqList[0].get(l)[i]+"|"+seqList[1].get(l)[i]);
+//                }
+//                saida.newLine();
+//            }
+//            
+//            
+//            saida.close();
+//        } catch (IOException ex) {
+//            Logger.getLogger(Banco.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
+    
     private void setSeq(ArrayList<Character[]> lista[], String linha, int tam) {
         int a = 0;
         Character[] seq1 = new Character[tam];
@@ -152,18 +181,18 @@ public class Banco {
     }
     
     
-    public void printDebug(String arq){
+    public void printDebug(String arq, int gene){
         try {
             BufferedWriter saida = new BufferedWriter(new FileWriter(arq));
             saida.append("Identificador");
-            int tamSNP = ref.pos[0].length;
+            int tamSNP = ref.pos[1].length;
             for(int i=0;i<tamSNP;i++){
-                saida.append(";"+ref.pos[0][i]);
+                saida.append(";"+ref.pos[gene][i]);
             }
             saida.append("\n");
             saida.append("ref");
            for(int i=0;i<tamSNP;i++){
-               saida.append(";"+ref.seq1[0][0].charAt(i));
+               saida.append(";"+ref.seq1[gene][0].charAt(i));
            }
            saida.append("\n");
            int tamId = this.id.length;
@@ -171,10 +200,10 @@ public class Banco {
                saida.append(this.id[i]);
                int count=0;
                for(int s=0;s<tamSNP;s++){
-                   if(count<this.genes[0].indexPos.length){
-                   int pos = this.genes[0].indexPos[count];
+                   if(count<this.genes[gene].indexPos.length){
+                   int pos = this.genes[gene].indexPos[count];
                     if(s==pos){
-                       saida.append(";"+this.genes[0].base1[i][count]+"|"+this.genes[0].base2[i][count]);
+                       saida.append(";"+this.genes[gene].base1[i][count]+"|"+this.genes[gene].base2[i][count]);
                        count++;
                        
                    }else{

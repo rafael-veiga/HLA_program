@@ -12,6 +12,7 @@ import java.io.Serializable;
  * @author rafael.veiga
  */
 public class Ref implements Serializable{
+public final String genomeVersion;    
 public final String[] genes;
 public final  int[][]pos; //[gene][pos]
 public final String[][] id; //[gene][L1]
@@ -26,6 +27,7 @@ public final String[][][]seq2; //[gene][L1][L2]
         this.id2 = config.getId2(id);
         this.seq1 = config.getSeq1(id);
         this.seq2 = config.getSeq2(id,id2);
+        this.genomeVersion = config.getNome();
     }
     
     public int getIndexPos(int pos, int gene){

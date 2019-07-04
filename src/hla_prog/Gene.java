@@ -7,6 +7,7 @@ package hla_prog;
 
 import hla_prog.MakeRef.Ref;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
@@ -30,7 +31,7 @@ public class Gene {
 
     }
 
-    public void getSNPs(ArrayList<Character[]> seqList[], ArrayList<Integer> posLista, int indexGene,Ref ref) {
+    public void getSNPs(ArrayList<Character[]>[] seqList, ArrayList<Integer> posLista, int indexGene,Ref ref) {
         ArrayList<Integer> ipos = new ArrayList();
         int valor;
         for (int i = 0; i < posLista.size(); i++) {
@@ -49,8 +50,11 @@ public class Gene {
             indexPos[i] = ref.getIndexPos(posLista.get(ipos.get(i)), indexGene);
             int tamId = seqList[0].size();
             for(int ind =0;ind<tamId;ind++){
-                base1[ind][i] = seqList[0].get(ind)[i];
-                base2[ind][i] = seqList[1].get(ind)[i];
+               //char a = seqList[0].get(ind)[52872];
+               //char b = seqList[1].get(ind)[52872];
+                //System.out.println(Arrays.toString(seqList[1].get(ind)));
+                base1[ind][i] = seqList[0].get(ind)[ipos.get(i)];
+                base2[ind][i] = seqList[1].get(ind)[ipos.get(i)];
             }
         }
         

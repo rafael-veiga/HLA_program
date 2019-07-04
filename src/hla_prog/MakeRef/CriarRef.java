@@ -22,17 +22,19 @@ import java.util.logging.Logger;
  */
 public class CriarRef {
 
-    // private boolean inver[];
-    // private boolean comp[];
+    //private boolean inver[];
+    //private boolean comp[];
     public String genes[];
     public Ref_banco bancos[];
-    public String seq[][];//[2][num genes] // 0=genoma 1 = alelo referencia
+    public String seq[][]; //[2][num genes] // 0=genoma 1 = alelo referencia
+    private String nome;       
     // private int pos[];
     //private int numGenesClassic;
 
     public String[][] gerId() {
         ArrayList<String>[] lista = new ArrayList[genes.length];
         int tam = genes.length;
+        
         for (int g = 0; g < tam; g++) {
             String id[] = this.bancos[g].getID();
             lista[g] = new ArrayList();
@@ -104,7 +106,9 @@ public class CriarRef {
 
             BufferedReader config = new BufferedReader(new FileReader(arqs[0]));
             String lin = config.readLine();
-            if (!lin.matches("﻿classic")) {
+            this.nome = lin;
+            lin = config.readLine();
+            if (!lin.matches("﻿*classic")) {
                 System.err.println("Error format config file : example: \"config/GRCh37p13.txt\"");
                 System.exit(1);
             }
@@ -342,7 +346,7 @@ public class CriarRef {
                 res[g][h] = processSeq(lista);
 
             }
-
+            System.out.println("gene " + g + " level 1");
         }
 
         return res;
@@ -371,6 +375,7 @@ public class CriarRef {
 
                 }
             }
+            System.out.println("gene " + g + " level 2");
         }
 
         return res;
@@ -469,4 +474,8 @@ public class CriarRef {
         return 'E';
     }
 
+    public String getNome(){
+        return this.nome;
+    }
+    
 }
