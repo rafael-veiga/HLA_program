@@ -6,10 +6,14 @@
 package hla_prog.MakeRef;
 
 import hla_prog.Banco;
+import hla_prog.LeitorResults;
 import hla_prog.MakeRef.LeitorDados;
 import hla_prog.MakeRef.Ref;
 import java.io.File;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -21,7 +25,10 @@ public class Janela extends javax.swing.JFrame {
     private StringBuilder saidaTex;
     private File arqPed = null;
     private File arqMap = null;
-    private Ref ref;
+    private Banco banco = null;
+    private Ref ref = null;
+    private String[][] resultTable;
+    private String[] columTable;
 
     public Janela() {
         File pasta = new File("data");
@@ -41,6 +48,7 @@ public class Janela extends javax.swing.JFrame {
 
         BotaoExecutar.setEnabled(false);
         jMenuSaveResult.setEnabled(false);
+        ViewResults.setEnabled(false);
 
         janela_saida.setEditable(false);
         // ref =  LeitorDados.load(genomas[1]);
@@ -67,6 +75,7 @@ public class Janela extends javax.swing.JFrame {
         BotaoExecutar = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         label_ped = new javax.swing.JLabel();
+        ViewResults = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuFile = new javax.swing.JMenu();
         jMenuOpenPed = new javax.swing.JMenuItem();
@@ -137,6 +146,13 @@ public class Janela extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("File Ped:");
 
+        ViewResults.setText("View Results");
+        ViewResults.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ViewResultsActionPerformed(evt);
+            }
+        });
+
         jMenuFile.setText("File");
 
         jMenuOpenPed.setText("Open Ped File");
@@ -164,6 +180,11 @@ public class Janela extends javax.swing.JFrame {
         jMenuFile.add(jMenuSaveResult);
 
         jMenuLoadReasult.setText("Load Results");
+        jMenuLoadReasult.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuLoadReasultActionPerformed(evt);
+            }
+        });
         jMenuFile.add(jMenuLoadReasult);
 
         jMenuExit.setText("Exit");
@@ -192,7 +213,9 @@ public class Janela extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(BotaoExecutar)
-                .addGap(134, 134, 134))
+                .addGap(31, 31, 31)
+                .addComponent(ViewResults)
+                .addGap(30, 30, 30))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -210,7 +233,9 @@ public class Janela extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(BotaoExecutar)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(BotaoExecutar)
+                    .addComponent(ViewResults))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -223,25 +248,25 @@ public class Janela extends javax.swing.JFrame {
             saidaTex.append("File map is empty\n");
             janela_saida.setText(saidaTex.toString());
             tag = false;
-           // jMenuSaveResult.setEnabled(false);
+            // jMenuSaveResult.setEnabled(false);
         }
         if (arqPed == null) {
             saidaTex.append("File ped is empty\n");
             janela_saida.setText(saidaTex.toString());
             tag = false;
-           // jMenuSaveResult.setEnabled(false);
+            // jMenuSaveResult.setEnabled(false);
         }
 
         if (tag) {
             saidaTex.append("load data files\n");
             janela_saida.setText(saidaTex.toString());
-            Banco b = new Banco(arqPed, arqMap, ref, janela_saida, saidaTex);
+            this.banco = new Banco(arqPed, arqMap, ref, janela_saida, saidaTex);
             saidaTex.append("load data files Done\n");
             janela_saida.setText(saidaTex.toString());
             jMenuSaveResult.setEnabled(true);
-            b.execute();
-            
-            
+            ViewResults.setEnabled(true);
+            this.banco.execute();
+
         }
     }//GEN-LAST:event_BotaoExecutarActionPerformed
 
@@ -282,7 +307,25 @@ public class Janela extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuOpenMapActionPerformed
 
     private void jMenuSaveResultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuSaveResultActionPerformed
-        // TODO add your handling code here:
+        File arq = null;
+        JFileChooser filechooser = new JFileChooser();
+        filechooser.setCurrentDirectory(new File("."));
+        filechooser.setDialogTitle("Save Result file");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("dat file", "dat");
+        filechooser.setFileFilter(filter);
+        if (filechooser.showSaveDialog(jMenuOpenMap) == JFileChooser.APPROVE_OPTION) {
+
+            if (filechooser.getSelectedFile().getName().endsWith(".dat")) {
+                arq = new File(filechooser.getSelectedFile().getPath());
+            } else {
+
+                arq = new File(filechooser.getSelectedFile().getPath().concat(".dat"));
+            }
+            LeitorResults.save(banco, arq);
+            saidaTex.append("save done: " + arq.getAbsolutePath() + "\n");
+            janela_saida.setText(saidaTex.toString());
+
+        }
     }//GEN-LAST:event_jMenuSaveResultActionPerformed
 
     private void jMenuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuExitActionPerformed
@@ -296,6 +339,35 @@ public class Janela extends javax.swing.JFrame {
 
         janela_saida.setText(saidaTex.toString());
     }//GEN-LAST:event_jSelectGenomaActionPerformed
+
+    private void jMenuLoadReasultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuLoadReasultActionPerformed
+
+        JFileChooser filechooser = new JFileChooser();
+        filechooser.setCurrentDirectory(new File("."));
+        filechooser.setDialogTitle("Load result file");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("dat file", "dat");
+        filechooser.setFileFilter(filter);
+        if (filechooser.showOpenDialog(jMenuOpenMap) == JFileChooser.APPROVE_OPTION) {
+            File arq = filechooser.getSelectedFile();
+            this.banco = LeitorResults.load(arq);
+            saidaTex = new StringBuilder("Loaded result data: " + arq.getAbsolutePath() + "\n");
+            janela_saida.setText(saidaTex.toString());
+        }
+    }//GEN-LAST:event_jMenuLoadReasultActionPerformed
+
+    private void ViewResultsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewResultsActionPerformed
+         JFrame f;    
+       
+    f=new JFrame();    
+    String data[][]= this.banco.getResultTable();
+    String column[]=this.banco.getCol();         
+    JTable jt=new JTable(data,column);    
+    jt.setBounds(30,40,200,300);          
+    JScrollPane sp=new JScrollPane(jt);    
+    f.add(sp);          
+    f.setSize(800,400);    
+    f.setVisible(true);    
+    }//GEN-LAST:event_ViewResultsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -339,6 +411,7 @@ public class Janela extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotaoExecutar;
+    private javax.swing.JButton ViewResults;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu2;

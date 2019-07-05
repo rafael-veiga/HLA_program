@@ -31,13 +31,12 @@ public class Banco implements Serializable{
     //private char seq[][][];// [2][ind][snps]
     private Ref ref;
     private Pheno fenotipo[][]; //[ind][gene]
-    private JTextArea janela_saida;
-    private StringBuilder saidaTex;
+   // private JTextArea janela_saida;
+  //  private StringBuilder saidaTex;
 
     public Banco(File arqPed, File arqMap, Ref ref, JTextArea janela_saida, StringBuilder saidaTex) {
         this.ref = ref;
-        this.janela_saida = janela_saida;
-        this.saidaTex = saidaTex;
+        
         try {
             BufferedReader ler = new BufferedReader(new FileReader(arqMap));
             String linha = ler.readLine();
@@ -106,8 +105,8 @@ public class Banco implements Serializable{
             int tamGene = this.ref.genes.length;
             this.fenotipo = new Pheno[idList.size()][tamGene];
 
-            this.saidaTex.append("Database contains " + idList.size() + " individuals\nDatabase contains " + posLista.size() + " SNPs\n");
-            this.janela_saida.setText(this.saidaTex.toString());
+            saidaTex.append("Database contains " + idList.size() + " individuals\nDatabase contains " + posLista.size() + " SNPs\n");
+            janela_saida.setText(saidaTex.toString());
             //posLista = pos[]
             this.genes = new Gene[this.ref.genes.length];
             tam = this.genes.length;
@@ -131,6 +130,64 @@ public class Banco implements Serializable{
 
     }
 
+    public String[][] getResultTable(){
+        int tamL = this.id.length;
+        int tamG = this.genes.length;
+       String[][] res = new String[tamL][tamG+1];
+        for(int l=0;l<tamL;l++){
+            res[l][0] = id[l];
+            for(int g=0;g<tamG;g++){
+                String saida = "";
+                int tamL1 = this.ref.id[g].length;
+                double max = 0;
+                for(int l1=0;l1<tamL1;l1++){
+                    if(max<this.fenotipo[l][g].resultL1[l1]){
+                        max = this.fenotipo[l][g].resultL1[l1];
+                    }
+                }
+                ArrayList<Integer> indexL1 = new ArrayList();
+                for(int l1=0;l1<tamL1;l1++){
+                    if(max==this.fenotipo[l][g].resultL1[l1]){
+                        indexL1.add(l1);
+                    }
+                }
+                
+                for(int l1:indexL1){
+                   int tamL2 = this.ref.id2[g][l1].length;
+                   double max2 = 0;
+                   for(int l2=0;l2<tamL2;l2++){
+                       if(max2<this.fenotipo[l][g].resultL2[l1][l2]){
+                           max2=this.fenotipo[l][g].resultL2[l1][l2];
+                       }
+                       
+                   }
+                   ArrayList<Integer> indexL2 = new ArrayList();
+                   for(int l2=0;l2<tamL2;l2++){
+                       if(max2==this.fenotipo[l][g].resultL2[l1][l2]){
+                           indexL2.add(l2);
+                       }   
+                   }
+                   for(int l2:indexL2){
+                  saida = saida.concat(";"+this.ref.id[g][l1]+":"+this.ref.id2[g][l1][l2] );
+                   }
+                   
+                }
+                res[l][g+1] = saida.substring(1);
+            }
+        }
+        
+        return res;
+    }
+    
+    public String[] getCol(){
+        String[] res = new String[this.genes.length+1];
+        res[0] = "ID";
+        for(int i=0;i<this.genes.length;i++){
+            res[i+1] = this.ref.genes[i];
+        }
+        return res;
+    }
+    
 //    private void printPed(String arq, ArrayList<String> idList,ArrayList<Integer> posLista, ArrayList<Character[]>[] seqList){
 //        try {
 //            BufferedWriter saida = new BufferedWriter(new FileWriter(arq));
