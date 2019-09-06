@@ -3,11 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hla_prog.MakeRef;
+package hla_prog;
 
 import hla_prog.Banco;
 import hla_prog.LeitorResults;
 import hla_prog.MakeRef.LeitorDados;
+import hla_prog.MakeRef.LeitorDados;
+import hla_prog.MakeRef.Ref;
 import hla_prog.MakeRef.Ref;
 import java.io.File;
 import javax.swing.JFileChooser;
@@ -21,7 +23,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author rafael
  */
 public class Janela extends javax.swing.JFrame {
-
+    
     private StringBuilder saidaTex;
     private File arqPed = null;
     private File arqMap = null;
@@ -29,7 +31,7 @@ public class Janela extends javax.swing.JFrame {
     private Ref ref = null;
     private String[][] resultTable;
     private String[] columTable;
-
+    
     public Janela() {
         File pasta = new File("data");
         File arqs[] = pasta.listFiles();
@@ -43,13 +45,13 @@ public class Janela extends javax.swing.JFrame {
         jSelectGenoma.setSelectedIndex(0);
         ref = LeitorDados.load(jSelectGenoma.getItemAt(0));
         saidaTex = new StringBuilder("Loaded reference data: " + ref.genomeVersion + "\n");
-
+        
         janela_saida.setText(saidaTex.toString());
-
+        
         BotaoExecutar.setEnabled(false);
         jMenuSaveResult.setEnabled(false);
         ViewResults.setEnabled(false);
-
+        jMenuExportCSV.setEnabled(false);
         janela_saida.setEditable(false);
         // ref =  LeitorDados.load(genomas[1]);
         // saidaTex.append("Done\n");
@@ -84,6 +86,7 @@ public class Janela extends javax.swing.JFrame {
         jMenuLoadReasult = new javax.swing.JMenuItem();
         jMenuExit = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        jMenuExportCSV = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -198,6 +201,15 @@ public class Janela extends javax.swing.JFrame {
         jMenuBar1.add(jMenuFile);
 
         jMenu2.setText("Edit");
+
+        jMenuExportCSV.setText("Export CSV");
+        jMenuExportCSV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuExportCSVActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuExportCSV);
+
         jMenuBar1.add(jMenu2);
 
         jMenu3.setText("Help");
@@ -256,7 +268,7 @@ public class Janela extends javax.swing.JFrame {
             tag = false;
             // jMenuSaveResult.setEnabled(false);
         }
-
+        
         if (tag) {
             saidaTex.append("load data files\n");
             janela_saida.setText(saidaTex.toString());
@@ -264,9 +276,10 @@ public class Janela extends javax.swing.JFrame {
             saidaTex.append("load data files Done\n");
             janela_saida.setText(saidaTex.toString());
             jMenuSaveResult.setEnabled(true);
+            jMenuExportCSV.setEnabled(true);
             ViewResults.setEnabled(true);
             this.banco.execute();
-
+            
         }
     }//GEN-LAST:event_BotaoExecutarActionPerformed
 
@@ -314,17 +327,17 @@ public class Janela extends javax.swing.JFrame {
         FileNameExtensionFilter filter = new FileNameExtensionFilter("dat file", "dat");
         filechooser.setFileFilter(filter);
         if (filechooser.showSaveDialog(jMenuOpenMap) == JFileChooser.APPROVE_OPTION) {
-
+            
             if (filechooser.getSelectedFile().getName().endsWith(".dat")) {
                 arq = new File(filechooser.getSelectedFile().getPath());
             } else {
-
+                
                 arq = new File(filechooser.getSelectedFile().getPath().concat(".dat"));
             }
             LeitorResults.save(banco, arq);
             saidaTex.append("save done: " + arq.getAbsolutePath() + "\n");
             janela_saida.setText(saidaTex.toString());
-
+            
         }
     }//GEN-LAST:event_jMenuSaveResultActionPerformed
 
@@ -336,12 +349,12 @@ public class Janela extends javax.swing.JFrame {
         int i = jSelectGenoma.getSelectedIndex();
         ref = LeitorDados.load(jSelectGenoma.getItemAt(i));
         saidaTex = new StringBuilder("Loaded reference data: " + ref.genomeVersion + "\n");
-
+        
         janela_saida.setText(saidaTex.toString());
     }//GEN-LAST:event_jSelectGenomaActionPerformed
 
     private void jMenuLoadReasultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuLoadReasultActionPerformed
-
+        
         JFileChooser filechooser = new JFileChooser();
         filechooser.setCurrentDirectory(new File("."));
         filechooser.setDialogTitle("Load result file");
@@ -351,23 +364,49 @@ public class Janela extends javax.swing.JFrame {
             File arq = filechooser.getSelectedFile();
             this.banco = LeitorResults.load(arq);
             saidaTex = new StringBuilder("Loaded result data: " + arq.getAbsolutePath() + "\n");
+            ViewResults.setEnabled(true);
+            this.jMenuExportCSV.setEnabled(true);
             janela_saida.setText(saidaTex.toString());
+            
         }
     }//GEN-LAST:event_jMenuLoadReasultActionPerformed
 
     private void ViewResultsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewResultsActionPerformed
-         JFrame f;    
-       
-    f=new JFrame();    
-    String data[][]= this.banco.getResultTable();
-    String column[]=this.banco.getCol();         
-    JTable jt=new JTable(data,column);    
-    jt.setBounds(30,40,200,300);          
-    JScrollPane sp=new JScrollPane(jt);    
-    f.add(sp);          
-    f.setSize(800,400);    
-    f.setVisible(true);    
+        JFrame f;        
+        
+        f = new JFrame();        
+        String data[][] = this.banco.getResultTable();
+        String column[] = this.banco.getCol();        
+        JTable jt = new JTable(data, column);        
+        jt.setBounds(30, 40, 200, 300);        
+        JScrollPane sp = new JScrollPane(jt);        
+        f.add(sp);        
+        f.setSize(800, 400);        
+        f.setVisible(true);        
     }//GEN-LAST:event_ViewResultsActionPerformed
+
+    private void jMenuExportCSVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuExportCSVActionPerformed
+        // TODO add your handling code here:
+        File arq = null;
+        JFileChooser filechooser = new JFileChooser();
+        filechooser.setCurrentDirectory(new File("."));
+        filechooser.setDialogTitle("Save result CSV");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV file", "csv");
+        filechooser.setFileFilter(filter);
+        if (filechooser.showSaveDialog(jMenuOpenMap) == JFileChooser.APPROVE_OPTION) {
+            
+            if (filechooser.getSelectedFile().getName().endsWith(".csv")) {
+                arq = new File(filechooser.getSelectedFile().getPath());
+            } else {
+                
+                arq = new File(filechooser.getSelectedFile().getPath().concat(".csv"));
+            }
+            this.banco.export_csv(arq);
+            saidaTex.append("save done: " + arq.getAbsolutePath() + "\n");
+            janela_saida.setText(saidaTex.toString());
+            
+        }
+    }//GEN-LAST:event_jMenuExportCSVActionPerformed
 
     /**
      * @param args the command line arguments
@@ -404,7 +443,7 @@ public class Janela extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Janela().setVisible(true);
-
+                
             }
         });
     }
@@ -418,6 +457,7 @@ public class Janela extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuExit;
+    private javax.swing.JMenuItem jMenuExportCSV;
     private javax.swing.JMenu jMenuFile;
     private javax.swing.JMenuItem jMenuLoadReasult;
     private javax.swing.JMenuItem jMenuOpenMap;
